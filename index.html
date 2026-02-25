@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCT Lab 2025-26</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+/* Common */
+.btn{
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:25px;
+    text-decoration:none;
+    color:white;
+    font-weight:600;
+    margin:6px 5px 0 0;
+    cursor:pointer;
+    border:none;
+}
+
+.start-btn{ background:linear-gradient(90deg,#a855f7,#7c3aed); }
+.solution-btn{ background:#334155; }
+.dev-btn{ background:#16a34a; }
+
+.card{
+    margin-top:25px;
+    background:#1e293b;
+    border-radius:20px;
+    padding:20px;
+    position:relative;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    width:6px;
+    background:linear-gradient(to bottom,#a855f7,#7c3aed);
+    border-radius:20px 0 0 20px;
+}
+
+.tag{
+    background:#334155;
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+textarea{
+    width:100%;
+    height:220px;
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    background:#1e293b;
+    color:white;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-top:10px;
+}
+
+/* Pages */
+.page{ display:none; }
+.active{ display:block; }
+
+.header{
+    text-align:center;
+    margin-top:40px;
+}
+
+.date-box{
+    margin:20px auto;
+    padding:10px 20px;
+    border-radius:30px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.2);
+    width:max-content;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= MAIN PAGE ================= -->
+<div id="mainPage" class="page active">
+
+<div class="header">
+    <h1>TCT-Lab-2025-26</h1>
+    <p>Daily Lab Problems</p>
+    <p>Developed by - Anuruddha Kumar</p>
+    <div class="date-box" id="date"></div>
+</div>
+
+<div id="labContainer"></div>
+
+</div>
+
+<!-- ================= SOLUTION PAGE ================= -->
+<div id="solutionPage" class="page">
+    <button class="btn solution-btn" onclick="goHome()">⬅ Back</button>
+    <h2 id="solutionTitle"></h2>
+    <pre id="solutionContent"></pre>
+</div>
+
+<!-- ================= DEVELOPER PAGE ================= -->
+<div id="developerPage" class="page">
+    <button class="btn solution-btn" onclick="goHome()">⬅ Back</button>
+    <h2>Developer Panel 🔐</h2>
+
+    <input type="password" id="devPass" placeholder="Enter Password">
+    <button class="btn dev-btn" onclick="login()">Login</button>
+
+    <div id="editor" style="display:none;">
+        <h3 id="editLabTitle"></h3>
+        <textarea id="editSolution"></textarea>
+        <button class="btn dev-btn" onclick="saveSolution()">Save Solution</button>
+    </div>
+</div>
+
+<script>
+
+let totalLabs = 11;
+let currentLab = 0;
+
+let solutions = JSON.parse(localStorage.getItem("labSolutions")) || {};
+
+const container = document.getElementById("labContainer");
+
+for(let i = totalLabs; i >= 1; i--){
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+        <div class="tag">HACKERRANK CONTEST</div>
+        <h2>Lab-${i}</h2>
+
+        <a href="https://www.hackerrank.com/lab-${i}-2025-26"
+           target="_blank"
+           class="btn start-btn">
+           Start Test
+        </a>
+
+        <button class="btn solution-btn"
+            onclick="openSolution(${i})">
+            View Solution
+        </button>
+
+        <button class="btn dev-btn"
+            onclick="openDeveloper(${i})">
+            Developer
+        </button>
+    `;
+
+    container.appendChild(card);
+}
+
+/* Navigation */
+function showPage(pageId){
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(pageId).classList.add("active");
+}
+
+function goHome(){
+    showPage("mainPage");
+}
+
+/* Solution Page */
+function openSolution(lab){
+    currentLab = lab;
+    document.getElementById("solutionTitle").innerText =
+        "Lab-" + lab + " Solution";
+
+    document.getElementById("solutionContent").innerText =
+        solutions[lab] || "Solution not added yet.";
+
+    showPage("solutionPage");
+}
+
+/* Developer Page */
+function openDeveloper(lab){
+    currentLab = lab;
+    document.getElementById("editor").style.display="none";
+    document.getElementById("devPass").value="";
+    showPage("developerPage");
+}
+
+function login(){
+    if(document.getElementById("devPass").value === "Anu@123"){ // Change password here
+        document.getElementById("editor").style.display="block";
+        document.getElementById("editLabTitle").innerText =
+            "Editing Lab-" + currentLab;
+
+        document.getElementById("editSolution").value =
+            solutions[currentLab] || "";
+    }else{
+        alert("Wrong Password");
+    }
+}
+
+function saveSolution(){
+    solutions[currentLab] =
+        document.getElementById("editSolution").value;
+
+    localStorage.setItem("labSolutions", JSON.stringify(solutions));
+    alert("Saved Successfully!");
+}
+
+/* Date */
+const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+document.getElementById("date").innerHTML =
+    new Date().toLocaleDateString('en-US', options);
+
+</script>
+
+</body>
+</html>

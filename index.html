@@ -151,7 +151,33 @@ let solutions = JSON.parse(localStorage.getItem("labSolutions")) || {};
 
 const container = document.getElementById("labContainer");
 
-for(let i = totalLabs; i >= 1; i--){
+const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+        <div class="tag">HACKERRANK CONTEST</div>
+        <h2>Lab-${1}</h2>
+
+        <a href="https://www.hackerrank.com/lab-${1}2025-26"
+           target="_blank"
+           class="btn start-btn">
+           Start Test
+        </a>
+
+        <button class="btn solution-btn"
+            onclick="openSolution(${1})">
+            View Solution
+        </button>
+
+        <button class="btn dev-btn"
+            onclick="openDeveloper(${1})">
+            Developer
+        </button>
+    `;
+
+    container.appendChild(card);    
+
+for(let i = totalLabs; i >= 2; i--){
     const card = document.createElement("div");
     card.className = "card";
 

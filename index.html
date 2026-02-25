@@ -150,34 +150,18 @@ let currentLab = 0;
 let solutions = JSON.parse(localStorage.getItem("labSolutions")) || {};
 
 const container = document.getElementById("labContainer");
+   
 
-const card = document.createElement("div");
-    card.className = "card";
+for(let i = totalLabs; i >= 1; i--){
 
-    card.innerHTML = `
-        <div class="tag">HACKERRANK CONTEST</div>
-        <h2>Lab-${1}</h2>
+    let link;
 
-        <a href="https://www.hackerrank.com/lab-${1}2025-26"
-           target="_blank"
-           class="btn start-btn">
-           Start Test
-        </a>
+    if(i === 1){
+        link = `https://www.hackerrank.com/lab-12025-26`;
+    }else{
+        link = `https://www.hackerrank.com/lab-${i}-2025-26`;
+    }
 
-        <button class="btn solution-btn"
-            onclick="openSolution(${1})">
-            View Solution
-        </button>
-
-        <button class="btn dev-btn"
-            onclick="openDeveloper(${1})">
-            Developer
-        </button>
-    `;
-
-    container.appendChild(card);    
-
-for(let i = totalLabs; i >= 2; i--){
     const card = document.createElement("div");
     card.className = "card";
 
@@ -185,7 +169,7 @@ for(let i = totalLabs; i >= 2; i--){
         <div class="tag">HACKERRANK CONTEST</div>
         <h2>Lab-${i}</h2>
 
-        <a href="https://www.hackerrank.com/lab-${i}-2025-26"
+        <a href="${link}"
            target="_blank"
            class="btn start-btn">
            Start Test
